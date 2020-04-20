@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:time_tracker_app/app/sign_in/sign_in_button.dart';
+import 'package:time_tracker_app/app/social_sign_in_button.dart';
 
 class SignInPage extends StatelessWidget {
   @override
@@ -11,6 +13,7 @@ class SignInPage extends StatelessWidget {
         elevation: 2.0,
       ),
       body: _buildContent(),
+      backgroundColor: Colors.grey[200],
     );
   }
 
@@ -30,22 +33,61 @@ class SignInPage extends StatelessWidget {
             ),
           ),
           SizedBox(
+            height: 50.0,
+          ),
+          SocialSignInButton(
+            assetName: 'images/google-logo.png',
+            text: 'Sign in with Google',
+            textColor: Colors.black87,
+            color: Colors.white,
+            onPressed: () {
+              print('button pressed');
+            },
+          ),
+          SizedBox(
             height: 8.0,
           ),
-          Container(
-            color: Colors.red,
-            child: SizedBox(
-              height: 100.0,
+          SocialSignInButton(
+            assetName: 'images/facebook-logo.png',
+            text: 'Sign in with Facebook',
+            textColor: Colors.white,
+            color: Color(0xFF334D92),
+            onPressed: () {
+              print('button pressed');
+            },
+          ),
+          SizedBox(
+            height: 8.0,
+          ),
+          SignInButton(
+            text: 'Sign in with email',
+            textColor: Colors.white,
+            color: Colors.teal[700],
+            onPressed: () {
+              print('button pressed');
+            },
+          ),
+          SizedBox(
+            height: 8.0,
+          ),
+          Text(
+            'or',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Colors.black87,
+              fontSize: 15.0,
             ),
           ),
           SizedBox(
             height: 8.0,
           ),
-          Container(
-            color: Colors.purple,
-            child: SizedBox(
-              height: 100.0,
-            ),
+          SignInButton(
+            text: 'Go anonymous',
+            textColor: Colors.black,
+            color: Colors.lime[300],
+            onPressed: () {
+              print('button pressed');
+            },
           ),
         ],
       ),
