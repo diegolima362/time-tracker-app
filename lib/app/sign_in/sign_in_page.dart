@@ -1,14 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:time_tracker_app/app/sign_in/sign_in_button.dart';
 import 'package:time_tracker_app/app/social_sign_in_button.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class SignInPage extends StatelessWidget {
+  SignInPage({@required this.onSignIn});
+
+  final Function(FirebaseUser) onSignIn;
+
+  Future<void> _signInAnonymously() async {
+    try {
+      final authResult = await FirebaseAuth.instance.signInAnonymously();
+      onSignIn(authResult.user);
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Center(
-          child: Text('Time Tracker'),
+          child: Text(
+            'Time Tracker',
+          ),
         ),
         elevation: 2.0,
       ),
@@ -41,7 +57,7 @@ class SignInPage extends StatelessWidget {
             textColor: Colors.black87,
             color: Colors.white,
             onPressed: () {
-              print('button pressed');
+              print('sign in with google');
             },
           ),
           SizedBox(
@@ -53,7 +69,7 @@ class SignInPage extends StatelessWidget {
             textColor: Colors.white,
             color: Color(0xFF334D92),
             onPressed: () {
-              print('button pressed');
+              print('Sign in with Facebook');
             },
           ),
           SizedBox(
@@ -64,7 +80,7 @@ class SignInPage extends StatelessWidget {
             textColor: Colors.white,
             color: Colors.teal[700],
             onPressed: () {
-              print('button pressed');
+              print('ign in with email');
             },
           ),
           SizedBox(
@@ -85,9 +101,7 @@ class SignInPage extends StatelessWidget {
             text: 'Go anonymous',
             textColor: Colors.black,
             color: Colors.lime[300],
-            onPressed: () {
-              print('button pressed');
-            },
+            onPressed: _signInAnonymously,
           ),
         ],
       ),
