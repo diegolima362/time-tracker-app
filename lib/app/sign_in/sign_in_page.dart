@@ -16,6 +16,14 @@ class SignInPage extends StatelessWidget {
     }
   }
 
+  Future<void> _signInWithGoogle() async {
+    try {
+      await auth.signInWithGoogle();
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,9 +63,7 @@ class SignInPage extends StatelessWidget {
             text: 'Sign in with Google',
             textColor: Colors.black87,
             color: Colors.white,
-            onPressed: () {
-              print('sign in with google');
-            },
+            onPressed: _signInWithGoogle,
           ),
           SizedBox(
             height: 8.0,
@@ -79,7 +85,7 @@ class SignInPage extends StatelessWidget {
             textColor: Colors.white,
             color: Colors.teal[700],
             onPressed: () {
-              print('ign in with email');
+              print('Sign in with email');
             },
           ),
           SizedBox(
