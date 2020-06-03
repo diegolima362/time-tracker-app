@@ -6,17 +6,25 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 class User {
   final String uid;
+
   User({@required this.uid});
 }
 
 abstract class AuthBase {
   Stream<User> get onAuthStateChanged;
+
   Future<User> currentUser();
+
   Future<User> signInAnonymously();
+
   Future<User> signInWithEmailAndPassword(String email, String password);
+
   Future<User> createUserWithEmailAndPassword(String email, String password);
+
   Future<User> signInWithGoogle();
+
   Future<User> signInWithFacebook();
+
   Future<void> signOut();
 }
 
@@ -50,6 +58,7 @@ class Auth implements AuthBase {
       email: email,
       password: password,
     );
+
     return _userFromFirebase(authResult.user);
   }
 
@@ -98,6 +107,7 @@ class Auth implements AuthBase {
   Future<User> signInWithFacebook() async {
     final facebookLogin = FacebookLogin();
     final result = await facebookLogin.logIn(['public_profile']);
+
     if (result.accessToken != null) {
       final authResult = await _firebaseAuth.signInWithCredential(
         FacebookAuthProvider.getCredential(
