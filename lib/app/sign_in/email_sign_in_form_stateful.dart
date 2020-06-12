@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:time_tracker_app/app/sign_in/email_sign_in_model.dart';
 import 'package:time_tracker_app/app/sign_in/validators.dart';
 import 'package:time_tracker_app/common_widgets/form_submit_button.dart';
 import 'package:time_tracker_app/common_widgets/platform_exception_alert_dialog.dart';
 import 'package:time_tracker_app/services/auth.dart';
 
-enum EmailSignInFormType { signIn, register }
-
-class EmailSingInForm extends StatefulWidget with EMailAndPasswordValidator {
+class EmailSingInFormStateful extends StatefulWidget
+    with EmailAndPasswordValidator {
   @override
-  _EmailSingInFormState createState() => _EmailSingInFormState();
+  _EmailSingInFormStatefulState createState() =>
+      _EmailSingInFormStatefulState();
 }
 
-class _EmailSingInFormState extends State<EmailSingInForm> {
+class _EmailSingInFormStatefulState extends State<EmailSingInFormStateful> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final FocusNode _emailFocusNode = FocusNode();
@@ -24,7 +26,7 @@ class _EmailSingInFormState extends State<EmailSingInForm> {
 
   String get _password => _passwordController.text;
 
-  bool _submited = false;
+  bool _submitted = false;
   bool _isLoading = false;
 
   @override
@@ -36,34 +38,9 @@ class _EmailSingInFormState extends State<EmailSingInForm> {
     super.dispose();
   }
 
-  void _submit() async {
-    setState(() {
-      _submited = true;
-      _isLoading = true;
-    });
-    try {
-      final auth = Provider.of<AuthBase>(context, listen: false);
-      if (_formType == EmailSignInFormType.signIn) {
-        await auth.signInWithEmailAndPassword(_email, _password);
-      } else {
-        await auth.createUserWithEmailAndPassword(_email, _password);
-      }
-      Navigator.of(context).pop();
-    } catch (e) {
-      PlatformExceptionAlertDialog(
-        title: 'Sign in Failed',
-        exception: e,
-      ).show(context);
-    } finally {
-      setState(() {
-        _isLoading = false;
-      });
-    }
-  }
-
   void _toggleFormType() {
     setState(() {
-      _submited = false;
+      _submitted = false;
       _formType = _formType == EmailSignInFormType.signIn
           ? EmailSignInFormType.register
           : EmailSignInFormType.signIn;
@@ -71,6 +48,31 @@ class _EmailSingInFormState extends State<EmailSingInForm> {
 
     _emailController.clear();
     _passwordController.clear();
+  }
+
+  Future<void> _submit() async {
+    setState(() {
+      _submitted = true;
+      _isLoading = true;
+    });
+    try {
+      final auth = Provider.of<AuthBase>(context);
+      if (_formType == EmailSignInFormType.signIn) {
+        await auth.signInWithEmailAndPassword(_email, _password);
+      } else {
+        await auth.createUserWithEmailAndPassword(_email, _password);
+      }
+      Navigator.of(context).pop();
+    } on PlatformException catch (e) {
+      PlatformExceptionAlertDialog(
+        title: 'Sign in failed',
+        exception: e,
+      ).show(context);
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 
   void _emailEditingComplete() {
@@ -111,7 +113,7 @@ class _EmailSingInFormState extends State<EmailSingInForm> {
 
   TextField _buildPasswordTextField() {
     bool showErrorText =
-        _submited && !widget.passwordValidator.isValid(_password);
+        _submitted && !widget.passwordValidator.isValid(_password);
 
     return TextField(
       controller: _passwordController,
@@ -129,7 +131,7 @@ class _EmailSingInFormState extends State<EmailSingInForm> {
   }
 
   TextField _buildEmailTextField() {
-    bool showErrorText = _submited && !widget.emailValidator.isValid(_email);
+    bool showErrorText = _submitted && !widget.emailValidator.isValid(_email);
 
     return TextField(
       controller: _emailController,

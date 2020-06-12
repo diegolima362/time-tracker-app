@@ -11,7 +11,7 @@ import 'package:time_tracker_app/services/auth.dart';
 class SignInPage extends StatelessWidget {
   final SignInBloc bloc;
 
-  const SignInPage({@required this.bloc});
+  SignInPage({@required this.bloc});
 
   static Widget create(BuildContext context) {
     final auth = Provider.of<AuthBase>(context);
