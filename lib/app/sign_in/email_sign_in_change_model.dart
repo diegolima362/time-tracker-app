@@ -25,12 +25,11 @@ class EmailSignInChangeModel with EmailAndPasswordValidator, ChangeNotifier {
       submitted: true,
       isLoading: true,
     );
-
     try {
       if (this.formType == EmailSignInFormType.signIn) {
-        await auth.signInWithEmailAndPassword(this.email, this.password);
+        await auth.signInWithEmailAndPassword(this.email.trim(), this.password.trim());
       } else {
-        await auth.createUserWithEmailAndPassword(this.email, this.password);
+        await auth.createUserWithEmailAndPassword(this.email.trim(), this.password.trim());
       }
     } catch (e) {
       updateWith(isLoading: false);
