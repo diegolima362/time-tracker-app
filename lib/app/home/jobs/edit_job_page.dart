@@ -98,7 +98,7 @@ class _EditJobPageState extends State<EditJobPage> {
             child: Text(
               'Save',
               style: TextStyle(
-                fontSize: 18,
+                fontSize: 18.0,
                 color: Colors.white,
               ),
             ),
