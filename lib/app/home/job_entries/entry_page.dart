@@ -10,12 +10,14 @@ import 'package:time_tracker_app/services/database.dart';
 
 class EntryPage extends StatefulWidget {
   const EntryPage({@required this.database, @required this.job, this.entry});
+
   final Job job;
   final Entry entry;
   final Database database;
 
-  static Future<void> show({BuildContext context, Database database, Job job, Entry entry}) async {
-    await Navigator.of(context).push(
+  static Future<void> show(
+      {BuildContext context, Database database, Job job, Entry entry}) async {
+    await Navigator.of(context, rootNavigator: true).push(
       MaterialPageRoute(
         builder: (context) =>
             EntryPage(database: database, job: job, entry: entry),

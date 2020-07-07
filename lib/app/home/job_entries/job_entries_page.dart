@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter/services.dart';
 import 'package:time_tracker_app/app/home/job_entries/entry_list_item.dart';
 import 'package:time_tracker_app/app/home/job_entries/entry_page.dart';
 import 'package:time_tracker_app/app/home/jobs/edit_job_page.dart';
@@ -16,18 +16,16 @@ import 'package:time_tracker_app/services/database.dart';
 
 class JobEntriesPage extends StatelessWidget {
   const JobEntriesPage({@required this.database, @required this.job});
+
   final Database database;
   final Job job;
 
   static Future<void> show(BuildContext context, Job job) async {
     final Database database = Provider.of<Database>(context, listen: false);
     await Navigator.of(context).push(
-      MaterialPageRoute(
+      CupertinoPageRoute(
         fullscreenDialog: false,
-        builder: (context) => JobEntriesPage(
-          database: database,
-          job: job,
-        ),
+        builder: (context) => JobEntriesPage(database: database, job: job),
       ),
     );
   }
@@ -55,11 +53,12 @@ class JobEntriesPage extends StatelessWidget {
             appBar: AppBar(
               elevation: 2.0,
               title: Text(jobName),
+              centerTitle: true,
               actions: <Widget>[
-                FlatButton(
-                  child: Text(
-                    'Edit',
-                    style: TextStyle(fontSize: 18.0, color: Colors.white),
+                IconButton(
+                  icon: Icon(
+                    Icons.edit,
+                    color: Colors.white,
                   ),
                   onPressed: () => EditJobPage.show(
                     context,
@@ -67,17 +66,20 @@ class JobEntriesPage extends StatelessWidget {
                     job: job,
                   ),
                 ),
+                IconButton(
+                  icon: Icon(
+                    Icons.add,
+                    color: Colors.white,
+                  ),
+                  onPressed: () => EntryPage.show(
+                    context: context,
+                    database: database,
+                    job: job,
+                  ),
+                ),
               ],
             ),
             body: _buildContent(context, job),
-            floatingActionButton: FloatingActionButton(
-              child: Icon(Icons.add),
-              onPressed: () => EntryPage.show(
-                context: context,
-                database: database,
-                job: job,
-              ),
-            ),
           );
         });
   }
