@@ -10,6 +10,7 @@ import 'package:time_tracker_app/services/database.dart';
 
 class EntriesBloc {
   EntriesBloc({@required this.database});
+
   final Database database;
 
   /// combine List<Job>, List<Entry> into List<EntryJob>
@@ -32,6 +33,8 @@ class EntriesBloc {
       _allEntriesStream.map(_createModels);
 
   static List<EntriesListTileModel> _createModels(List<EntryJob> allEntries) {
+    if (allEntries.isEmpty) return [];
+
     final allDailyJobsDetails = DailyJobsDetails.all(allEntries);
 
     // total duration across all jobs

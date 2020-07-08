@@ -6,8 +6,14 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 class User {
   final String uid;
+  final String photoUrl;
+  final String displayName;
 
-  User({@required this.uid});
+  User({
+    @required this.uid,
+    @required this.photoUrl,
+    @required this.displayName,
+  });
 }
 
 abstract class AuthBase {
@@ -32,7 +38,13 @@ class Auth implements AuthBase {
   final _firebaseAuth = FirebaseAuth.instance;
 
   User _userFromFirebase(FirebaseUser user) {
-    return user == null ? null : User(uid: user.uid);
+    if (user == null) return null;
+
+    return User(
+      uid: user.uid,
+      displayName: user.displayName,
+      photoUrl: user.photoUrl,
+    );
   }
 
   @override
