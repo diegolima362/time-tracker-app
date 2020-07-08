@@ -4,9 +4,7 @@ abstract class StringValidator {
 
 class NonEmptyStringValidator implements StringValidator {
   @override
-  bool isValid(String value) {
-    return value.isNotEmpty;
-  }
+  bool isValid(String value) => value == null ? false : value.isNotEmpty;
 }
 
 class EmailAndPasswordValidator {
