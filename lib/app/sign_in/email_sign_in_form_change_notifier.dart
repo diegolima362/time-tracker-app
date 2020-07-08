@@ -9,16 +9,18 @@ import 'package:time_tracker_app/services/auth.dart';
 class EmailSingInFormChangeNotifier extends StatefulWidget {
   final EmailSignInChangeModel model;
 
-  EmailSingInFormChangeNotifier({@required this.model});
+  EmailSingInFormChangeNotifier({@required this.model, this.onSignedIn});
 
-  static Widget create(BuildContext context) {
+  final VoidCallback onSignedIn;
+
+  static Widget create(BuildContext context, {VoidCallback onSignedIn}) {
     final AuthBase auth = Provider.of<AuthBase>(context);
 
     return ChangeNotifierProvider<EmailSignInChangeModel>(
       create: (_) => EmailSignInChangeModel(auth: auth),
       child: Consumer<EmailSignInChangeModel>(
         builder: (context, model, _) =>
-            EmailSingInFormChangeNotifier(model: model),
+            EmailSingInFormChangeNotifier(model: model, onSignedIn: onSignedIn),
       ),
     );
   }
@@ -49,7 +51,9 @@ class _EmailSingInFormChangeNotifierState
   Future<void> _submit() async {
     try {
       await model.submit();
-      Navigator.of(context).pop();
+      if (widget.onSignedIn != null) {
+        widget.onSignedIn();
+      }
     } on PlatformException catch (e) {
       PlatformExceptionAlertDialog(
         title: 'Sign in failed',

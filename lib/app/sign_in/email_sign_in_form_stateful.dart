@@ -9,6 +9,10 @@ import 'package:time_tracker_app/services/auth.dart';
 
 class EmailSingInFormStateful extends StatefulWidget
     with EmailAndPasswordValidator {
+  EmailSingInFormStateful({Key key, this.onSignedIn}) : super(key: key);
+
+  final VoidCallback onSignedIn;
+
   @override
   _EmailSingInFormStatefulState createState() =>
       _EmailSingInFormStatefulState();
@@ -56,13 +60,15 @@ class _EmailSingInFormStatefulState extends State<EmailSingInFormStateful> {
       _isLoading = true;
     });
     try {
-      final auth = Provider.of<AuthBase>(context);
+      final auth = Provider.of<AuthBase>(context, listen: false);
       if (_formType == EmailSignInFormType.signIn) {
         await auth.signInWithEmailAndPassword(_email, _password);
       } else {
         await auth.createUserWithEmailAndPassword(_email, _password);
       }
-      Navigator.of(context).pop();
+      if (widget.onSignedIn != null) {
+        widget.onSignedIn();
+      }
     } on PlatformException catch (e) {
       PlatformExceptionAlertDialog(
         title: 'Sign in failed',
@@ -116,6 +122,7 @@ class _EmailSingInFormStatefulState extends State<EmailSingInFormStateful> {
         _submitted && !widget.passwordValidator.isValid(_password);
 
     return TextField(
+      key: Key('password'),
       controller: _passwordController,
       focusNode: _passwordFocusNode,
       decoration: InputDecoration(
@@ -134,6 +141,7 @@ class _EmailSingInFormStatefulState extends State<EmailSingInFormStateful> {
     bool showErrorText = _submitted && !widget.emailValidator.isValid(_email);
 
     return TextField(
+      key: Key('email'),
       controller: _emailController,
       focusNode: _emailFocusNode,
       decoration: InputDecoration(
